@@ -1,0 +1,26 @@
+meta {
+  name: 1 - Create Centre (Admin)
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/centres
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+body:json {
+  {
+    "name": "Apollo Diagnostics Central",
+    "location": "101 Marine Drive, Mumbai"
+  }
+}
+
+vars:post-response {
+  centreId: res.body.data.id
+}

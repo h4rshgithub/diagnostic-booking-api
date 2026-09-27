@@ -1,0 +1,27 @@
+meta {
+  name: 1 - Create Booking
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/bookings
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "centre_id": "{{centreId}}",
+    "test_id": "{{testId}}",
+    "slot": "2026-12-01T10:00:00.000Z"
+  }
+}
+
+vars:post-response {
+  bookingId: res.body.data.id
+}

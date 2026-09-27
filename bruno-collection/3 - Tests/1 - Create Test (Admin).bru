@@ -1,0 +1,27 @@
+meta {
+  name: 1 - Create Test (Admin)
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/tests
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+body:json {
+  {
+    "name": "Complete Blood Count (CBC)",
+    "price": 1200,
+    "centreIds": ["{{centreId}}"]
+  }
+}
+
+vars:post-response {
+  testId: res.body.data.id
+}

@@ -1,0 +1,21 @@
+meta {
+  name: 1 - Process Payment (Success)
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/payments
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "booking_id": "{{bookingId}}"
+  }
+}

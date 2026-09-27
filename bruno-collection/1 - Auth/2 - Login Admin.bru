@@ -1,0 +1,22 @@
+meta {
+  name: 2 - Login Admin
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/auth/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "admin@diagnostics.com",
+    "password": "Admin@1234"
+  }
+}
+
+vars:post-response {
+  adminToken: res.body.data.token
+}

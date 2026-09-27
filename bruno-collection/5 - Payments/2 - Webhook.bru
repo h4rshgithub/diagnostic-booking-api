@@ -1,0 +1,19 @@
+meta {
+  name: 2 - Webhook
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/payments/webhook
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "event_id": "evt_sample_12345",
+    "booking_id": "{{bookingId}}",
+    "payment_status": "SUCCESS"
+  }
+}
