@@ -323,41 +323,4 @@ A payment record is created for each processed booking. Duplicate payment attemp
 
 The `/payments/webhook` endpoint is fully idempotent. The same `event_id` can be sent multiple times without side effects.
 
-**How it works:**
-
-The `ProcessedWebhookEvent` table has a UNIQUE database constraint on `event_id`. When a webhook is received, the handler opens a transaction and attempts to insert the `event_id` along with the payment and booking updates in the same transaction.
-
-If a duplicate `event_id` arrives (including concurrently), the UNIQUE constraint causes the transaction to fail with a `P2002` error. The handler catches this specific error and returns HTTP 200 without creating additional records or modifying the booking again.
-
-This approach avoids a check-then-insert pattern which would have a race condition between the existence check and the insert under concurrent requests.
-
-## Assumptions
-
-- Centres and tests are managed exclusively by admin users
-- A test can belong to multiple centres, a centre can offer multiple tests
-- Booking amount is always taken from the current test price at the time of booking
-- Cancelling a confirmed booking requires a refund flow that is out of scope; attempting it returns 409
-- The webhook endpoint is not authenticated (assumed to be secured at the infrastructure level in production, for example, by IP allowlist or HMAC signature verification)
-- UUIDs are used for all primary keys
-- Pagination defaults: page 1, limit 20, max limit 100
-
-## Known Limitations
-
-- No email verification or password reset
-- No refresh token mechanism; users must re-login after expiry
-- Webhook has no HMAC signature verification (out of scope for this assignment)
-- No soft deletes; deleting a centre or test with existing bookings may violate FK constraints if those are not cascaded
-- Rate limiting uses in-memory storage; this does not work correctly across multiple API instances (a shared store like Redis would be required in production)
-
-## What Would Be Improved With More Time
-
-- Add HMAC signature verification to the webhook endpoint
-- Use Redis for distributed rate limiting
-- Add refresh token support
-- Add soft deletes for centres and tests
-- Add an admin endpoint to view all bookings across users
-- Add appointment slot management to prevent double-booking of time slots
-- Add email notifications for booking confirmation and payment status
-- Extract webhook signature verification into middleware
-- Add OpenAPI documentation generation from Zod schemas (for example, using zod-to-openapi)
-- Add database-level row locking for the payment processing transaction to handle very high concurrency
+abase-level row locking for the payment processing transaction to handle very high concurrency
